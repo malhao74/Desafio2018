@@ -10,10 +10,15 @@
 
     <div class="row">
         <div class="col-md-4">
-            <asp:TreeView ID="TreeViewArtigos" OnSelectedNodeChanged ="TreeViewArtigos_SelectedNodeChanged" runat="server"></asp:TreeView>
+            <asp:TreeView ID="TreeViewArtigos" OnSelectedNodeChanged ="TreeViewArtigos_SelectedNodeChanged" runat="server" ImageSet="Faq">
+                <HoverNodeStyle Font-Underline="True" ForeColor="Purple" />
+                <NodeStyle Font-Names="Tahoma" Font-Size="8pt" ForeColor="DarkBlue" HorizontalPadding="5px" NodeSpacing="0px" VerticalPadding="0px" />
+                <ParentNodeStyle Font-Bold="False" />
+                <SelectedNodeStyle Font-Underline="True" HorizontalPadding="0px" VerticalPadding="0px" />
+            </asp:TreeView>
         </div>
         <div class="col-md-4">
-            <asp:TextBox ID="TextBoxArtigosDescricao" Width = "200" style ="resize:none" runat="server"></asp:TextBox>
+            <asp:TextBox ID="TextBoxArtigosDescricao"  Width = "200" style ="resize:none" runat="server"></asp:TextBox>
         </div>
     </div>
 

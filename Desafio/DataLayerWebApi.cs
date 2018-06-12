@@ -20,7 +20,7 @@ namespace Desafio
 
         public static async Task<List<Artigo>> GetArtigosAtRoot()
         {
-            return await GetArtigos(rootPath);
+            return await GetArtigosAt(rootPath);
         }
 
         public static async Task<List<Artigo>> GetArtigosAt(int[] ids)
@@ -35,25 +35,24 @@ namespace Desafio
                 separador = "&";
             }
 
-            return await GetArtigos(path);
+            return await GetArtigosAt(path);
         }
 
         #endregion
 
         #region Metodos privados
 
-        private static async Task<List<Artigo>> GetArtigos(string path)
+        private static async Task<List<Artigo>> GetArtigosAt(string path)
         {
             HttpClient client = new HttpClient();
             HttpResponseMessage response = await client.GetAsync(path);
+            client.Dispose();
 
             if (response.IsSuccessStatusCode)
             {
                 string resposta = await response.Content.ReadAsStringAsync();
                 resposta = resposta.Replace("\\", string.Empty);
                 resposta = resposta.Trim('"');
-                //resposta = "[{\"Id\":1,\"Nome\":\"Isto já foi um artigo\",\"Descricao\":null},{\"Id\":2,\"Nome\":\"Artigo 2\",\"Descricao\":\"Texto referente ao artigo 2....\"},{\"Id\":3,\"Nome\":\"Isto não é um artigo...\",\"Descricao\":null},{\"Id\":4,\"Nome\":\"Artigo 4\",\"Descricao\":\"Texto referente ao artigo 4....\"}]";
-                //resposta = resposta.Replace(@"\\\",@"\");
 
                 List<Artigo> listaArtigos = JsonConvert.DeserializeObject<List<Artigo>>(resposta);
                 return listaArtigos;

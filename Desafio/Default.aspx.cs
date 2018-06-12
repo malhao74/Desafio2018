@@ -24,11 +24,12 @@ namespace Desafio
                         TreeNode treeNode = new TreeNode(artigo.Nome, artigo.Id.ToString());
                         TreeViewArtigos.Nodes.Add(treeNode);
                     }
-                    PageConfig(listaArtigos.Count);
+                    TextBoxArtigosDescricaoConfig(listaArtigos.Count);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     // Colocar informação de site em construção?
+                    Console.WriteLine($"Problemas no carregamento inicial da tree: {ex.Message}");
                 }
             }
         }
@@ -40,7 +41,7 @@ namespace Desafio
             // Se já tiver sido alimentado anteriormente.
             if (treeNode.ChildNodes.Count != 0)
             {
-                treeNode.Collapse();
+                treeNode.Expand();
             }
             else
             {
@@ -52,6 +53,7 @@ namespace Desafio
                 // Se o artigo de facto for um a categoria.
                 if (listaArtigos.Count > 1 || listaArtigos[0].Descricao == null)
                 {
+                    treeNode.SelectAction = TreeNodeSelectAction.Expand;
                     foreach (Artigo artigo in listaArtigos)
                     {
                         TreeNode treeNodeNew = new TreeNode(artigo.Nome, artigo.Id.ToString());
@@ -67,8 +69,8 @@ namespace Desafio
         #endregion
 
         #region Metodos privados
-        // Configuração inicial da página.
-        private void PageConfig(int numeroNos)
+        // Configuração da TextBoxArtigosDescricao.
+        private void TextBoxArtigosDescricaoConfig(int numeroNos)
         {
             TextBoxArtigosDescricao.TextMode = TextBoxMode.MultiLine;
             TextBoxArtigosDescricao.BorderStyle = BorderStyle.None;
