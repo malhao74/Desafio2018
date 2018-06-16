@@ -10,6 +10,10 @@ namespace Desafio
 {
     public partial class _Default : Page
     {
+        #region Definicao de variaveis
+        private readonly string iconCategoria = "Generic_icon-icons.com_75002_32.ico";
+        private readonly string iconArtigo = "icon-document_87920_32.ico";
+        #endregion
         #region Eventos
         async void Page_loadComplete(object sender, EventArgs e)
         {
@@ -22,6 +26,8 @@ namespace Desafio
                     foreach (Artigo artigo in listaArtigos)
                     {
                         TreeNode treeNode = new TreeNode(artigo.Nome, artigo.Id.ToString());
+                        // Se não tem descricao é uma categoria
+                        treeNode.ImageUrl = GetIcon(artigo.Descricao == null); ;
                         TreeViewArtigos.Nodes.Add(treeNode);
                     }
                     TextBoxArtigosDescricaoConfig(listaArtigos.Count);
@@ -57,6 +63,9 @@ namespace Desafio
                     foreach (Artigo artigo in listaArtigos)
                     {
                         TreeNode treeNodeNew = new TreeNode(artigo.Nome, artigo.Id.ToString());
+                        // Se não tem descricao é uma categoria
+                        treeNodeNew.ImageUrl = GetIcon(artigo.Descricao == null);
+
                         treeNode.ChildNodes.Add(treeNodeNew);
                     }
                 }
@@ -77,6 +86,18 @@ namespace Desafio
             TextBoxArtigosDescricao.ReadOnly = true;
             TextBoxArtigosDescricao.Height = TreeViewArtigos.Height;
             TextBoxArtigosDescricao.Rows = numeroNos;
+        }
+        // Contiguracao do icon dos nos
+        private string GetIcon(bool isCategoria)
+        {
+            if (isCategoria)
+            {
+                return iconCategoria;
+            }
+            else
+            {
+                return iconArtigo;
+            }
         }
         #endregion
     }
