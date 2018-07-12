@@ -7,6 +7,7 @@ using System.Web.Routing;
 using System.Web.Security;
 using System.Web.SessionState;
 
+[assembly: CLSCompliant(false)]
 namespace Desafio
 {
     public class Global : HttpApplication

@@ -10,41 +10,42 @@ namespace Desafio
 {
     public partial class _Default : Page
     {
-        #region Definicao de variaveis
-        private readonly string iconCategoria = "Generic_icon-icons.com_75002_32.ico";
-        private readonly string iconArtigo = "icon-document_87920_32.ico";
+        #region Field definition
+        private readonly string iconCategoria = "~/Images/Generic_icon-icons.com_75002_32.ico";
+        private readonly string iconArtigo = "~/Images/icon-document_87920_32.ico";
         #endregion
-        #region Eventos
-        async void Page_loadComplete(object sender, EventArgs e)
+
+        #region Events
+        async void Page_LoadComplete(object sender, EventArgs e)
         {
-            if(IsPostBack == false || TreeViewArtigos.Nodes.Count == 0)
+            if(IsPostBack == false || TreeViewArticles.Nodes.Count == 0)
             {
                 try
                 {
-                    // Carregamento inicial de artigos.
-                    List<Artigo> listaArtigos = await DataLayerWebApi.GetArtigosAtRoot();
-                    foreach (Artigo artigo in listaArtigos)
+                    // Initial article update
+                    List<Article> listaArtigos = await DataLayerWebAPI.GetArticlesAtRootAsync();
+                    foreach (Article artigo in listaArtigos)
                     {
-                        TreeNode treeNode = new TreeNode(artigo.Nome, artigo.Id.ToString());
-                        // Se não tem descricao é uma categoria
-                        treeNode.ImageUrl = GetIcon(artigo.Descricao == null); ;
-                        TreeViewArtigos.Nodes.Add(treeNode);
+                        TreeNode treeNode = new TreeNode(artigo.Name, artigo.Id.ToString())
+                        {
+                            // If the article has no description then it's category
+                            ImageUrl = GetIcon(artigo.Description == null)
+                        };
+                        
+                        TreeViewArticles.Nodes.Add(treeNode);
                     }
-                    TextBoxArtigosDescricaoConfig(listaArtigos.Count);
                 }
                 catch (Exception ex)
                 {
-                    // Colocar informação de site em construção?
+                    // Put up a site in construction page?
                     Console.WriteLine($"Problemas no carregamento inicial da tree: {ex.Message}");
                 }
             }
         }
-        protected async void TreeViewArtigos_SelectedNodeChanged(object sender, EventArgs e)
+        protected async void TreeViewArticles_SelectedNodeChanged(object sender, EventArgs e)
         {
-            TextBoxArtigosDescricao.Text = "";
-
-            TreeNode treeNode = TreeViewArtigos.SelectedNode;
-            // Se já tiver sido alimentado anteriormente.
+            TreeNode treeNode = TreeViewArticles.SelectedNode;
+            // If the node as content already, it expands the node 
             if (treeNode.ChildNodes.Count != 0)
             {
                 treeNode.Expand();
@@ -54,40 +55,36 @@ namespace Desafio
                 string valuePath = treeNode.ValuePath;
                 int[] intPath = valuePath.Split('/').Select<string, int>(x => Convert.ToInt32(x)).ToArray();
 
-                List<Artigo> listaArtigos = await DataLayerWebApi.GetArtigosAt(intPath);
+                List<Article> listaArtigos = await DataLayerWebAPI.GetArticlesAtAsync(intPath);
 
-                // Se o artigo de facto for um a categoria.
-                if (listaArtigos.Count > 1 || listaArtigos[0].Descricao == null)
+                // If the article is in fact a category
+                if (listaArtigos.Count > 1 || listaArtigos[0].Description == null)
                 {
                     treeNode.SelectAction = TreeNodeSelectAction.Expand;
-                    foreach (Artigo artigo in listaArtigos)
+                    foreach (Article artigo in listaArtigos)
                     {
-                        TreeNode treeNodeNew = new TreeNode(artigo.Nome, artigo.Id.ToString());
-                        // Se não tem descricao é uma categoria
-                        treeNodeNew.ImageUrl = GetIcon(artigo.Descricao == null);
+                        TreeNode treeNodeNew = new TreeNode(artigo.Name, artigo.Id.ToString())
+                        {
+                            // If the article has no description the it's a category
+                            ImageUrl = GetIcon(artigo.Description == null)
+                        };
 
                         treeNode.ChildNodes.Add(treeNodeNew);
                     }
                 }
                 else
                 {
-                    TextBoxArtigosDescricao.Text = listaArtigos[0].Descricao;
+                    LabelDescricao.Text = listaArtigos[0].Description;
                 }
             }
         }
         #endregion
 
-        #region Metodos privados
-        // Configuração da TextBoxArtigosDescricao.
-        private void TextBoxArtigosDescricaoConfig(int numeroNos)
-        {
-            TextBoxArtigosDescricao.TextMode = TextBoxMode.MultiLine;
-            TextBoxArtigosDescricao.BorderStyle = BorderStyle.None;
-            TextBoxArtigosDescricao.ReadOnly = true;
-            TextBoxArtigosDescricao.Height = TreeViewArtigos.Height;
-            TextBoxArtigosDescricao.Rows = numeroNos;
-        }
-        // Contiguracao do icon dos nos
+        /// <summary>
+        /// Node icon configuration
+        /// </summary>
+        /// <param name="isCategoria"></param>
+        /// <returns></returns>
         private string GetIcon(bool isCategoria)
         {
             if (isCategoria)
@@ -99,6 +96,5 @@ namespace Desafio
                 return iconArtigo;
             }
         }
-        #endregion
     }
 }

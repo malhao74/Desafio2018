@@ -10,23 +10,21 @@ using System.Threading.Tasks;
 
 namespace Desafio
 {
-    public class DataLayerWebApi
+    /// <summary>
+    /// Data layer used to access the web API
+    /// </summary>
+    public static class DataLayerWebAPI
     {
-        #region Declaracao de variaveis
-        private static readonly string rootPath = "http://localhost:54064/api/Default";
-        #endregion
+        private const string rootPath = "http://localhost:54064/api/Default";
 
-        #region Metodos publicos
+        #region Public methods
 
-        public static async Task<List<Artigo>> GetArtigosAtRoot()
+        public static async Task<List<Article>> GetArticlesAtRootAsync() => await GetArticlesAtAsync(rootPath);
+
+        public static async Task<List<Article>> GetArticlesAtAsync(int[] ids)
         {
-            return await GetArtigosAt(rootPath);
-        }
-
-        public static async Task<List<Artigo>> GetArtigosAt(int[] ids)
-        {
-            string path = rootPath + "?";
-            string separador = "";
+            string path = rootPath;
+            string separador = "?";
 
             for (int i = 0; i < ids.Length; i++)
             {
@@ -34,15 +32,14 @@ namespace Desafio
 
                 separador = "&";
             }
-
-            return await GetArtigosAt(path);
+            return await GetArticlesAtAsync(path);
         }
 
         #endregion
 
-        #region Metodos privados
+        #region Private methods
 
-        private static async Task<List<Artigo>> GetArtigosAt(string path)
+        private static async Task<List<Article>> GetArticlesAtAsync(string path)
         {
             HttpClient client = new HttpClient();
             HttpResponseMessage response = await client.GetAsync(path);
@@ -54,12 +51,10 @@ namespace Desafio
                 resposta = resposta.Replace("\\", string.Empty);
                 resposta = resposta.Trim('"');
 
-                List<Artigo> listaArtigos = JsonConvert.DeserializeObject<List<Artigo>>(resposta);
+                List<Article> listaArtigos = JsonConvert.DeserializeObject<List<Article>>(resposta);
                 return listaArtigos;
             }
-
             return null;
-
         }
         #endregion
     }

@@ -7,11 +7,16 @@ using System.Web.UI;
 
 namespace Desafio
 {
-    public class BundleConfig
+    public static class BundleConfig
     {
         // For more information on Bundling, visit https://go.microsoft.com/fwlink/?LinkID=303951
         public static void RegisterBundles(BundleCollection bundles)
         {
+            if (bundles == null)
+            {
+                return;
+            }
+
             bundles.Add(new ScriptBundle("~/bundles/WebFormsJs").Include(
                             "~/Scripts/WebForms/WebForms.js",
                             "~/Scripts/WebForms/WebUIValidation.js",

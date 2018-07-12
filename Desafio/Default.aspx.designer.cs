@@ -13,21 +13,21 @@ namespace Desafio {
     public partial class _Default {
         
         /// <summary>
-        /// TreeViewArtigos control.
+        /// TreeViewArticles control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TreeView TreeViewArtigos;
+        protected global::System.Web.UI.WebControls.TreeView TreeViewArticles;
         
         /// <summary>
-        /// TextBoxArtigosDescricao control.
+        /// LabelDescricao control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBoxArtigosDescricao;
+        protected global::System.Web.UI.WebControls.Label LabelDescricao;
     }
 }
